@@ -1,0 +1,95 @@
+<p-blockUI [blocked]="blockedDocument"></p-blockUI>
+<p-toast></p-toast>
+<div class="fade-in">
+    <p-menubar [model]="items"></p-menubar>
+    <p-table #dt1 dataKey="id" [value]="representatives" [rows]="10" [showCurrentPageReport]="true"
+        styleClass="p-datatable-gridlines"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
+
+        <ng-template pTemplate="header">
+            <tr>
+                <th scope="col">
+                    <div class="p-d-flex p-jc-between p-ai-center centro">
+                        Número
+                    </div>
+                </th>
+                <th scope="col">
+                    <div class="p-d-flex p-jc-between p-ai-center centro">
+                        Nombre Horario
+                    </div>
+                </th>
+                <th scope="col">
+                    <div class="p-d-flex p-jc-between p-ai-center centro">
+                        Estado
+                    </div>
+                </th>
+                <th scope="col">
+                    <div class="p-d-flex p-jc-between p-ai-center centro">
+                        Acciones
+                    </div>
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-horario let-rowIndex="rowIndex">
+            <tr>
+                <td>
+                    {{ rowIndex +1 }}
+                </td>
+                <td>
+                    {{horario.nombre_horario}}
+                </td>
+                <td>
+                    {{horario.estado_id==3? "Activo":"Inacitvo"}}
+                </td>
+                <td style="text-align: center;">
+                    <button style="margin-right: 0.5em;" pButton type="button" (click)="editar(horario)"
+                        icon="pi pi-pencil" class="boton-verde"></button>
+                    <button style="margin-right: 0.5em;" pButton type="button" (click)="confirm(horario.id)"
+                        icon="pi pi-trash" class="p-button-danger"></button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="7">No customers found.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+
+    <p-dialog header="{{accion}}" [(visible)]="display" [style]="{width: '50vw'}">
+        <c-card class="mb-4">
+            <p-messages [(value)]="msgsModal"></p-messages>
+            <c-card-body>
+                <form [formGroup]="formulario">
+                    <input type="hidden" name="_token" [value]="token">
+                    <c-row>
+                        <c-col>
+                            Horario
+                        </c-col>
+                        <c-col>
+                            Activo
+                        </c-col>
+                    </c-row>
+                    <c-row>
+                        <c-col>
+                            <input type="text" pInputText placeholder="Horario" name="nombre_horario"
+                                [(ngModel)]="horario.nombre_horario" style="width: 100%;"
+                                formControlName="nombre_horario">
+                        </c-col>
+                        <c-col>
+                            <p-dropdown [options]="activos" optionLabel="nombre" [(ngModel)]="horario.estado_id"
+                                name="estado_id" [style]="{'width':'100%'}" formControlName="estado_id"></p-dropdown>
+                        </c-col>
+                    </c-row>
+                </form>
+            </c-card-body>
+            <c-card-footer>
+                <button pButton type="button" label="{{boton}}" class="p-button-primary" (click)="Registrar()">
+                </button>
+            </c-card-footer>
+        </c-card>
+    </p-dialog>
+
+    <p-confirmDialog header="Eliminar" icon="pi pi-exclamation-triangle"></p-confirmDialog>
+
+</div>

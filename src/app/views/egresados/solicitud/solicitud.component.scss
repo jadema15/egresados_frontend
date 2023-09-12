@@ -1,0 +1,33 @@
+body {
+    font-size: 10px;
+}
+
+.boton-rojo {
+    background-color: red;
+    color: white;
+}
+
+.boton-verde {
+    background-color: green;
+    color: white;
+}
+
+.centro {
+    text-align: center;
+}
+
+.negrilla {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.calendar-small .p-inputtext {
+    padding: 0.08rem;
+    /* Ajusta el espaciado interior del input */
+    font-size: 10px;
+    /* Ajusta el tamaño de fuente */
+    width: 130px;
+    /* Ajusta el ancho del calendario según tus necesidades */
+    height: 15px;
+    /* Ajusta la altura del calendario según tus necesidades */
+}

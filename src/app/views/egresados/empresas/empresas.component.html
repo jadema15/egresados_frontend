@@ -1,0 +1,191 @@
+<p-blockUI [blocked]="blockedDocument"></p-blockUI>
+<p-toast></p-toast>
+<div class="fade-in">
+    <p-menubar [model]="items"></p-menubar>
+    <p-table #dt1 dataKey="id" [value]="representatives" [rows]="10" [showCurrentPageReport]="true"
+        styleClass="p-datatable-gridlines"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
+
+        <ng-template pTemplate="header">
+            <tr>
+                <th scope="col">
+                    <div class="p-d-flex p-jc-between p-ai-center centro">
+                        Número
+                    </div>
+                </th>
+                <th scope="col">
+                    <div class="p-d-flex p-jc-between p-ai-center centro">
+                        Empresa
+                    </div>
+                </th>
+                <th scope="col">
+                    <div class="p-d-flex p-jc-between p-ai-center centro">
+                        Tipo Empresa
+                    </div>
+                </th>
+                <th scope="col">
+                    <div class="p-d-flex p-jc-between p-ai-center centro">
+                        Estado
+                    </div>
+                </th>
+                <th scope="col">
+                    <div class="p-d-flex p-jc-between p-ai-center centro">
+                        Acciones
+                    </div>
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-empresa let-rowIndex="rowIndex">
+            <tr>
+                <td>
+                    {{ rowIndex +1 }}
+                </td>
+                <td>
+                    {{empresa.razon_social}}
+                </td>
+                <td>
+                    {{empresa.tipo_empresa.nombre_tipo_empresa}}
+                </td>
+                <td>
+                    {{empresa.estado_id==3? "Activo":"Inacitvo"}}
+                </td>
+                <td style="text-align: center;">
+                    <button style="margin-right: 0.5em;" pButton type="button" (click)="editar(empresa)"
+                        icon="pi pi-pencil" class="boton-verde"></button>
+                    <button style="margin-right: 0.5em;" pButton type="button" (click)="confirm(empresa.id)"
+                        icon="pi pi-trash" class="p-button-danger"></button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="7">No se encuentran registros</td>
+            </tr>
+        </ng-template>
+    </p-table>
+
+    <p-dialog header="{{accion}}" [(visible)]="display" [style]="{ 'width': '50vw', 'height': dialogHeight }">
+        <c-card class="mb-4">
+            <p-messages [(value)]="msgsModal"></p-messages>
+            <c-card-body>
+                <form [formGroup]="formulario">
+                    <input type="hidden" name="_token" [value]="token">
+                    <c-row>
+                        <c-col class="negrilla">
+                            Empresa
+                        </c-col>
+                        <c-col class="negrilla">
+                            Nit
+                        </c-col>
+                        <c-col class="negrilla">
+                            Tipo Empresa
+                        </c-col>
+                    </c-row>
+                    <c-row>
+                        <c-col>
+                            <input type="text" pInputText placeholder="Empresa" name="razon_social"
+                                [(ngModel)]="empresa.razon_social" style="width: 100%;" formControlName="razon_social">
+                        </c-col>
+                        <c-col>
+                            <input type="text" pInputText placeholder="Nit" name="nit" [(ngModel)]="empresa.nit"
+                                style="width: 100%;" formControlName="nit">
+                        </c-col>
+                        <c-col>
+                            <p-dropdown [options]="tiposEmpresas" optionLabel="nombre_tipo_empresa"
+                                [(ngModel)]="empresa.tipoempresa_id" name="tipoempresa_id"
+                                [style]="{'width':'100%'}" formControlName="tipoempresa_id"></p-dropdown>
+                        </c-col>
+                    </c-row>
+                    <c-row style="margin-top: 1em;">
+                        <c-col class="negrilla">
+                            Primer Nombre
+                        </c-col>
+                        <c-col class="negrilla">
+                            Segundo Nombre
+                        </c-col>
+                    </c-row>
+
+                    <c-row style="margin-top: 1em;">
+                        <c-col>
+                            <input type="text" pInputText placeholder="Primer Nombre" name="nombre"
+                                [(ngModel)]="empresa.nombre" style="width: 100%;" formControlName="nombre">
+                        </c-col>
+                        <c-col>
+                            <input type="text" pInputText placeholder="Segundo Nombre" name="nombre2"
+                                [(ngModel)]="empresa.nombre2" style="width: 100%;" formControlName="nombre2">
+                        </c-col>
+                    </c-row>
+
+                    <c-row style="margin-top: 1em;">
+                        <c-col class="negrilla">
+                            Primer Apellido
+                        </c-col>
+                        <c-col class="negrilla">
+                            Segundo Apellido
+                        </c-col>
+                    </c-row>
+                    <c-row style="margin-top: 1em;">
+                        <c-col>
+                            <input type="text" pInputText placeholder="Primer Apellido" name="apellido"
+                                [(ngModel)]="empresa.apellido" style="width: 100%;" formControlName="apellido">
+                        </c-col>
+                        <c-col>
+                            <input type="text" pInputText placeholder="Segundo Apellido" name="apellido2"
+                                [(ngModel)]="empresa.apellido2" style="width: 100%;" formControlName="apellido2">
+                        </c-col>
+                    </c-row>
+                    <c-row style="margin-top: 1em;">
+                        <c-col class="negrilla">
+                            Dirección
+                        </c-col>
+                        <c-col class="negrilla">
+                            Correo
+                        </c-col>
+                    </c-row>
+                    <c-row>
+                        <c-col>
+                            <input type="text" pInputText placeholder="Dirección" name="direccion"
+                                [(ngModel)]="empresa.direccion" style="width: 100%;" formControlName="direccion">
+                        </c-col>
+                        <c-col>
+                            <input type="text" pInputText placeholder="Correo" name="correo"
+                                [(ngModel)]="empresa.correo" style="width: 100%;" formControlName="correo">
+                        </c-col>
+                    </c-row>
+                    <c-row style="margin-top: 1em;">
+                        <c-col class="negrilla">
+                            Celular
+                        </c-col>
+                        <c-col class="negrilla">
+                            Teléfono
+                        </c-col>
+                        <c-col class="negrilla">
+                            Estado
+                        </c-col>
+                    </c-row>
+                    <c-row>
+                        <c-col>
+                            <input type="text" pInputText placeholder="Celular" name="celular"
+                                [(ngModel)]="empresa.celular" style="width: 100%;" formControlName="celular">
+                        </c-col>
+                        <c-col>
+                            <input type="text" pInputText placeholder="Teléfono" name="telefono"
+                                [(ngModel)]="empresa.telefono" style="width: 100%;" formControlName="telefono">
+                        </c-col>
+                        <c-col>
+                            <p-dropdown [options]="activos" optionLabel="nombre" [(ngModel)]="empresa.estado_id"
+                                name="estado_id" [style]="{'width':'100%'}" formControlName="estado_id"></p-dropdown>
+                        </c-col>
+                    </c-row>
+
+                </form>
+            </c-card-body>
+            <c-card-footer>
+                <button pButton type="button" label="{{boton}}" class="p-button-primary" (click)="Registrar()">
+                </button>
+            </c-card-footer>
+        </c-card>
+    </p-dialog>
+
+    <p-confirmDialog header="Eliminar" icon="pi pi-exclamation-triangle"></p-confirmDialog>
+</div>

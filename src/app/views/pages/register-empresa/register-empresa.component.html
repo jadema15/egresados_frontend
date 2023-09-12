@@ -1,0 +1,166 @@
+<p-blockUI [blocked]="blockedDocument"></p-blockUI>
+<div class="bg-light min-vh-100 d-flex flex-row align-items-center">
+    <c-container>
+        <c-row class="justify-content-center">
+            <c-col lg="7" md="9" xl="6">
+                <c-card class="mx-4">
+                    <c-card-body class="p-4">
+                        <form [formGroup]="formulario">
+                            <h2 style="text-align: center;">Registrar Empresa</h2>
+                            <p-messages [(value)]="msgsModal"></p-messages>
+                            <c-row style="margin-top: 1em;">
+                                <c-col>
+                                    <c-input-group class="mb-3">
+                                        <span cInputGroupText>
+                                        </span>
+                                        <input cFormControl placeholder="(*) Nit" name="nit" type="text"
+                                            (change)="validaDocumento()" formControlName="nit" />
+                                    </c-input-group>
+                                </c-col>
+
+                                <c-col>
+                                    <c-input-group class="mb-3">
+                                        <span cInputGroupText>
+
+                                        </span>
+                                        <input autoComplete="razon_social" cFormControl placeholder="(*) Razón Social"
+                                            name="razon_social" formControlName="razon_social" />
+                                    </c-input-group>
+                                </c-col>
+                            </c-row>
+
+                            <c-row style="margin-top: 1em;">
+                                <c-col>
+                                    <c-input-group class="mb-3">
+                                        <span cInputGroupText>
+
+                                        </span>
+                                        <input autoComplete="nombre" cFormControl placeholder="(*) Primer Nombre"
+                                            name="nombre" formControlName="nombre" />
+                                    </c-input-group>
+                                </c-col>
+
+                                <c-col>
+                                    <c-input-group class="mb-3">
+                                        <span cInputGroupText>
+
+                                        </span>
+                                        <input autoComplete="nombre2" cFormControl placeholder="Segundo Nombre"
+                                            name="nombre2" formControlName="nombre2" />
+                                    </c-input-group>
+                                </c-col>
+                            </c-row>
+
+                            <c-row style="margin-top: 1em;">
+                                <c-col>
+                                    <c-input-group class="mb-3">
+                                        <span cInputGroupText>
+
+                                        </span>
+                                        <input autoComplete="apellido" cFormControl placeholder="(*) Primer Apellido"
+                                            name="apellido" formControlName="apellido" />
+                                    </c-input-group>
+                                </c-col>
+
+                                <c-col>
+                                    <c-input-group class="mb-3">
+                                        <span cInputGroupText>
+
+                                        </span>
+                                        <input autoComplete="apellido2" cFormControl placeholder="Segundo Apellido"
+                                            name="apellido2" formControlName="apellido2" />
+                                    </c-input-group>
+                                </c-col>
+                            </c-row>
+
+                            <c-row style="margin-top: 1em;">
+                                <p-dropdown optionLabel="nombre_tipo_empresa" name="tipoempresa_id"
+                                    [options]="tiposEmpresas" [style]="{'width':'100%'}" placeholder="(*) Tipo Empresa"
+                                    formControlName="tipoempresa_id"></p-dropdown>
+                            </c-row>
+
+                            <c-row style="margin-top: 1em;">
+                                <c-col>
+                                    <c-input-group class="mb-3">
+                                        <span cInputGroupText>
+
+                                        </span>
+                                        <input autoComplete="direccion" cFormControl placeholder="Dirección"
+                                            name="direccion" formControlName="direccion" type="text" />
+                                    </c-input-group>
+                                </c-col>
+
+                                <c-col>
+                                    <c-input-group class="mb-3">
+                                        <span cInputGroupText>
+
+                                        </span>
+                                        <input autoComplete="correo" cFormControl placeholder="(*) Correo" type="text"
+                                            (change)="validaCorreo()" name="correo" formControlName="correo" />
+                                    </c-input-group>
+                                </c-col>
+                            </c-row>
+
+                            <c-row style="margin-top: 1em;">
+                                <c-col>
+                                    <c-input-group class="mb-3">
+                                        <span cInputGroupText>
+
+                                        </span>
+                                        <input autoComplete="celular" cFormControl placeholder="(*) Celular" type="text"
+                                            (change)="validaCelular()" name="celular" formControlName="celular" />
+                                    </c-input-group>
+                                </c-col>
+
+                                <c-col>
+                                    <c-input-group class="mb-3">
+                                        <span cInputGroupText>
+
+                                        </span>
+                                        <input autoComplete="telefono" cFormControl placeholder="Teléfono"
+                                            name="telefono" formControlName="telefono" type="text" />
+                                    </c-input-group>
+                                </c-col>
+                            </c-row>
+                            <c-row style="margin-top: 1em;">
+                                <c-col>
+                                    <c-input-group class="mb-3">
+                                        <span cInputGroupText>
+
+                                        </span>
+                                        <input autoComplete="password" cFormControl placeholder="(*) Password"
+                                            name="password" formControlName="password" type="password" />
+                                    </c-input-group>
+                                </c-col>
+
+                                <c-col>
+                                    <c-input-group class="mb-3">
+                                        <span cInputGroupText>
+
+                                        </span>
+                                        <input autoComplete="password_re" cFormControl placeholder="(*) Repita Password"
+                                            type="password" name="password_re" formControlName="password_re" />
+                                    </c-input-group>
+                                </c-col>
+
+                            </c-row>
+                            <div class="d-grid">
+                                <c-row style="margin-top: 1em;">
+                                    <c-col>
+                                        <button cButton color="info" (click)="registrar()"
+                                            style="width: 100%; color: rgb(255, 255, 255);">Crear Cuenta</button>
+                                    </c-col>
+
+                                    <c-col>
+                                        <button cButton color="danger" (click)="regresar()"
+                                            style="width: 100%; color: rgb(255, 255, 255);">Regresar a Login</button>
+                                    </c-col>
+                                </c-row>
+                            </div>
+                        </form>
+                    </c-card-body>
+                </c-card>
+            </c-col>
+        </c-row>
+    </c-container>
+</div>

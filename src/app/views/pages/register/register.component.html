@@ -1,0 +1,163 @@
+<p-blockUI [blocked]="blockedDocument"></p-blockUI>
+<div class="bg-light min-vh-100 d-flex flex-row align-items-center">
+  <c-container>
+    <c-row class="justify-content-center">
+      <c-col lg="7" md="9" xl="6">
+        <c-card class="mx-4">
+          <c-card-body class="p-4">
+            <form [formGroup]="formulario">
+              <h4 style="text-align: center;">Registrar Egresado Escuela de Salud Sur Colombiana</h4>
+              <p-messages [(value)]="msgsModal"></p-messages>
+              <c-row style="margin-top: 1em;">
+                <c-col>
+                  <c-input-group class="mb-3">
+                    <span cInputGroupText>
+
+                    </span>
+                    <input autoComplete="nombre" cFormControl placeholder="(*) Primer Nombre" name="nombre"
+                      formControlName="nombre" />
+                  </c-input-group>
+                </c-col>
+
+                <c-col>
+                  <c-input-group class="mb-3">
+                    <span cInputGroupText>
+
+                    </span>
+                    <input autoComplete="nombre2" cFormControl placeholder="Segundo Nombre" name="nombre2"
+                      formControlName="nombre2" />
+                  </c-input-group>
+                </c-col>
+              </c-row>
+
+              <c-row style="margin-top: 1em;">
+                <c-col>
+                  <c-input-group class="mb-3">
+                    <span cInputGroupText>
+
+                    </span>
+                    <input autoComplete="apellido" cFormControl placeholder="(*) Primer Apellido" name="apellido"
+                      formControlName="apellido" />
+                  </c-input-group>
+                </c-col>
+
+                <c-col>
+                  <c-input-group class="mb-3">
+                    <span cInputGroupText>
+
+                    </span>
+                    <input autoComplete="apellido2" cFormControl placeholder="Segundo Apellido" name="apellido2"
+                      formControlName="apellido2" />
+                  </c-input-group>
+                </c-col>
+              </c-row>
+
+              <c-row style="margin-top: 1em;">
+                <c-col>
+                  <c-input-group class="mb-3">
+                    <span cInputGroupText>
+
+                    </span>
+                    <input autoComplete="off" cFormControl placeholder="(*) Documento" name="documento"
+                      (change)="validaDocumento()" formControlName="documento" />
+                  </c-input-group>
+                </c-col>
+                <c-col>
+                  <p-dropdown optionLabel="nombre_programa" name="programa_id" [options]="programas"
+                    [style]="{'width':'100%', 'z-index': 1000}" placeholder="(*) Programa Técnico"
+                    formControlName="programa_id"></p-dropdown>
+                </c-col>
+              </c-row>
+
+              <c-row style="margin-top: 1em;">
+                <c-col>
+                  <p-dropdown optionLabel="nombre_sexo" name="sexo" [options]="sexos" [style]="{'width':'100%'}"
+                    placeholder="(*) Sexo" formControlName="sexo"></p-dropdown>
+                </c-col>
+
+                <c-col>
+                  <p-calendar [showIcon]="true" dateFormat="yy-mm-dd" formControlName="fecha_nac"
+                    (onSelect)="seleccionarFecha()" placeholder="(*) Fecha Nacimiento" dateFormat="dd/mm/yy"
+                    [yearNavigator]="true" yearRange="1975:2030"
+                    [style]="{'position': 'relative', 'width':'100%'}"></p-calendar>
+                </c-col>
+              </c-row>
+
+              <c-row style="margin-top: 1em;">
+                <c-col>
+                  <p-dropdown optionLabel="nombre_estado_civil" name="estadocivil_id" [options]="estadocivil"
+                    [style]="{'width':'100%'}" placeholder="(*) Estado Civil"
+                    formControlName="estadocivil_id"></p-dropdown>
+                </c-col>
+
+                <c-col>
+                  <c-input-group class="mb-3">
+                    <span cInputGroupText>
+
+                    </span>
+                    <input autoComplete="correo" cFormControl placeholder="(*) Correo" type="text" name="correo"
+                      (change)="validaCorreo()" formControlName="correo" />
+                  </c-input-group>
+                </c-col>
+              </c-row>
+
+              <c-row style="margin-top: 1em;">
+                <c-col>
+                  <c-input-group class="mb-3">
+                    <span cInputGroupText>
+
+                    </span>
+                    <input cFormControl placeholder="(*) Celular" type="number" name="celular"
+                      (change)="validaCelular()" formControlName="celular" />
+                  </c-input-group>
+                </c-col>
+                <c-col>
+                </c-col>
+              </c-row>
+
+              <c-row style="margin-top: 1em;">
+                <c-col>
+                  <c-input-group class="mb-3">
+                    <span cInputGroupText>
+
+                    </span>
+                    <input cFormControl placeholder="(*) Password" name="password" formControlName="password"
+                      type="password" value="" />
+                  </c-input-group>
+                </c-col>
+
+                <c-col>
+                  <c-input-group class="mb-3">
+                    <span cInputGroupText>
+                    </span>
+                    <input cFormControl placeholder="(*) Repita Password" type="password" autocomplete="off"
+                      name="password_re" formControlName="password_re" />
+                  </c-input-group>
+                </c-col>
+              </c-row>
+              <c-row style="margin-top: 1em;">
+                <c-col>
+                  <textarea pInputTextarea placeholder="Observación" style="width: 100%;" formControlName="observacion"
+                    name="observacion"></textarea>
+                </c-col>
+              </c-row>
+              <div class="d-grid">
+                <c-row style="margin-top: 1em;">
+                  <c-col>
+                    <button cButton color="info" (click)="registrar()"
+                      style="width: 100%; color: rgb(255, 255, 255);">Crear Cuenta</button>
+                  </c-col>
+
+                  <c-col>
+                    <button cButton color="danger" (click)="regresar()"
+                      style="width: 100%; color: rgb(255, 255, 255);">Regresar a Login</button>
+                  </c-col>
+                </c-row>
+              </div>
+            </form>
+          </c-card-body>
+        </c-card>
+      </c-col>
+    </c-row>
+  </c-container>
+</div>

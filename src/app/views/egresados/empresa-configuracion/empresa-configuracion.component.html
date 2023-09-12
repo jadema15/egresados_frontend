@@ -1,0 +1,181 @@
+<p-blockUI [blocked]="blockedDocument"></p-blockUI>
+<p-toast></p-toast>
+<div class="fade-in">
+    <c-card class="mb-4">
+        <p-messages [(value)]="msgsModal"></p-messages>
+        <c-card-body>
+            <form [formGroup]="formulario">
+                <input type="hidden" name="_token" [value]="token">
+                <c-row style="margin-top: 1em;">
+                    <c-col class="negrilla">
+                        Primer Nombre
+                    </c-col>
+                    <c-col class="negrilla">
+                        Segundo Nombre
+                    </c-col>
+                    <c-col class="negrilla">
+                        Primer Apellido
+                    </c-col>
+                    <c-col class="negrilla">
+                        Segundo Apellido
+                    </c-col>
+                </c-row>
+                <c-row style="margin-top: 1em;">
+                    <c-col>
+                        <input pInputText [(ngModel)]="empresa.nombre" formControlName="nombre"
+                            [style]="{'width':'100%'}" type="text" name="nombre" placeholder="Primer Nombre">
+                    </c-col>
+
+                    <c-col>
+                        <input pInputText [(ngModel)]="empresa.nombre2" formControlName="nombre2"
+                            placeholder="Segundo Nombre" [style]="{'width':'100%'}" type="text" name="nombre2">
+                    </c-col>
+
+                    <c-col>
+                        <input pInputText [(ngModel)]="empresa.apellido" formControlName="apellido"
+                            placeholder="Primer Apellido" [style]="{'width':'100%'}" type="text" name="apellido">
+                    </c-col>
+
+                    <c-col>
+                        <input pInputText [(ngModel)]="empresa.apellido2" formControlName="apellido2"
+                            placeholder="Segundo Apellido" [style]="{'width':'100%'}" type="text" name="apellido2">
+                    </c-col>
+
+                </c-row>
+
+                <c-row style="margin-top: 1em;">
+                    <c-col class="negrilla">
+                        Nit
+                    </c-col>
+                    <c-col class="negrilla">
+                        Razón Social
+                    </c-col>
+                    <c-col class="negrilla">
+                        Celular
+                    </c-col>
+                </c-row>
+
+                <c-row style="margin-top: 1em;">
+                    <c-col>
+                        <input pInputText [(ngModel)]="empresa.nit" formControlName="nit" placeholder="Nit"
+                            [style]="{'width':'100%'}" type="text" name="nit" readonly>
+                    </c-col>
+                    <c-col>
+                        <input pInputText [(ngModel)]="empresa.razon_social" formControlName="razon_social"
+                            placeholder="Razón Social" [style]="{'width':'100%'}" type="text" name="razon_social">
+                    </c-col>
+                    <c-col>
+                        <input pInputText [(ngModel)]="empresa.celular" formControlName="celular" placeholder="Celular"
+                            [style]="{'width':'100%'}" type="text" name="celular">
+                    </c-col>
+                </c-row>
+
+                <c-row style="margin-top: 1em;">
+                    <c-col class="negrilla">
+                        Tipo Empresa
+                    </c-col>
+                    <c-col class="negrilla">
+                        Direccion
+                    </c-col>
+                    <c-col class="negrilla">
+                        Teléfono
+                    </c-col>
+                    <c-col class="negrilla">
+                        Correo
+                    </c-col>
+                </c-row>
+
+                <c-row style="margin-top: 1em;">
+                    <c-col>
+                        <p-dropdown [options]="tiposEmpresas" optionLabel="nombre_tipo_empresa"
+                            [(ngModel)]="empresa.tipoempresa_id" name="tipoempresa_id" [style]="{'width':'100%'}"
+                            formControlName="tipoempresa_id"></p-dropdown>
+                    </c-col>
+
+                    <c-col>
+                        <input pInputText [(ngModel)]="empresa.direccion" formControlName="direccion"
+                            placeholder="Direccion" [style]="{'width':'100%'}" type="text" name="direccion">
+                    </c-col>
+
+                    <c-col>
+                        <input pInputText [(ngModel)]="empresa.telefono" formControlName="telefono"
+                            placeholder="Telefono" [style]="{'width':'100%'}" type="text" name="telefono">
+                    </c-col>
+
+                    <c-col>
+                        <input pInputText [(ngModel)]="empresa.correo" formControlName="correo" placeholder="Correo"
+                            [style]="{'width':'100%'}" type="text" name="correo">
+                    </c-col>
+
+                </c-row>
+            </form>
+        </c-card-body>
+        <c-card-footer>
+            <button pButton type="button" label="Actualizar" class="p-button-primary" (click)="actualizarEmpresa()"
+                style="margin-left: 1em;">
+            </button>
+            <button pButton type="button" label="Cambiar Contraseña" class="p-button-warning"
+                (click)="modalActualizarPassword()" style="margin-left: 1em;">
+            </button>
+        </c-card-footer>
+    </c-card>
+</div>
+
+<p-dialog header="Cambiar Contraseña" [(visible)]="visualizarUpdatePassword"
+    [breakpoints]="{'960px': '75vw', '640px': '100vw'}" [style]="{width: '40vw'}">
+
+    <c-card class="mb-4">
+        <p-messages [(value)]="msgsModalCambiarPassword"></p-messages>
+        <c-card-body>
+            <form [formGroup]="formularioCambioPassword">
+                <input type="hidden" name="_token" [value]="token">
+
+                <c-row style="margin-top: 1em;">
+                    <c-col class="negrilla">
+                        Contraseña actual
+                    </c-col>
+                </c-row>
+                <c-row style="margin-top: 1em;">
+                    <c-col>
+                        <input pInputText formControlName="password_old" [style]="{'width':'100%'}" type="password"
+                            [readonly]="permiteCambiarPassword" (change)="validarPassword()"
+                            [(ngModel)]="cambioPassword.password_old" name="password_old">
+                    </c-col>
+                </c-row>
+                <div *ngIf="permiteCambiarPassword">
+                    <c-row style="margin-top: 1em;">
+                        <c-col class="negrilla">
+                            Nueva Contraseña
+                        </c-col>
+                    </c-row>
+                    <c-row style="margin-top: 1em;">
+                        <c-col>
+                            <input pInputText formControlName="password_new" [style]="{'width':'100%'}" type="password"
+                                [(ngModel)]="cambioPassword.password_new" name="password_new">
+                        </c-col>
+                    </c-row>
+                    <c-row style="margin-top: 1em;">
+                        <c-col class="negrilla">
+                            Repetir Nueva Contraseña
+                        </c-col>
+                    </c-row>
+                    <c-row style="margin-top: 1em;">
+                        <c-col>
+                            <input pInputText formControlName="password_re" [style]="{'width':'100%'}" type="password"
+                                [(ngModel)]="cambioPassword.password_re" name="password_re">
+                        </c-col>
+                    </c-row>
+                </div>
+
+            </form>
+        </c-card-body>
+        <c-card-footer>
+            <button pButton type="button" label="Cambiar Contraseña" class="p-button-primary" style="margin-left: 1em;"
+                [disabled]="!permiteCambiarPassword" (click)="CambiarPassword()">
+            </button>
+            <button pButton type="button" label="Cerrar" class="p-button-danger" style="margin-left: 1em;"
+                (click)="cerrarModalActualizarPassword()">
+            </button>
+        </c-card-footer>
+    </c-card>
+</p-dialog>

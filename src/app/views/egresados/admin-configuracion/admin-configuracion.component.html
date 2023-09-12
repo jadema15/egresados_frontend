@@ -1,0 +1,168 @@
+<p-blockUI [blocked]="blockedDocument"></p-blockUI>
+<p-toast></p-toast>
+<div class="fade-in">
+    <div *ngIf="!existeEgresado">
+        <p-menubar [model]="items"></p-menubar>
+    </div>
+
+    <p-table #dt1 dataKey="id" [value]="listaUsuarios" [rows]="10" [showCurrentPageReport]="true"
+        styleClass="p-datatable-gridlines"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
+
+        <ng-template pTemplate="header">
+            <tr>
+                <th scope="col">
+                    <div class="p-d-flex p-jc-between p-ai-center centro">
+                        N°
+                    </div>
+                </th>
+                <th scope="col">
+                    <div class="p-d-flex p-jc-between p-ai-center centro">
+                        Nombres
+                    </div>
+                </th>
+                <th scope="col">
+                    <div class="p-d-flex p-jc-between p-ai-center centro">
+                        Apellidos
+                    </div>
+                </th>
+                <th scope="col">
+                    <div class="p-d-flex p-jc-between p-ai-center centro">
+                        Contacto
+                    </div>
+                </th>
+                <th scope="col">
+                    <div class="p-d-flex p-jc-between p-ai-center centro">
+                        Correo
+                    </div>
+                </th>
+                <th scope="col">
+                    <div class="p-d-flex p-jc-between p-ai-center centro">
+                        Estado
+                    </div>
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-usuarios let-rowIndex="rowIndex">
+            <tr>
+                <td>
+                    {{ rowIndex +1 }}
+                </td>
+                <td>
+                    {{usuarios.nombre}} {{usuarios.nombre2}}
+                </td>
+                <td>
+                    {{usuarios.apellido}} {{usuarios.apellido2}}
+                </td>
+                <td>
+                    {{usuarios.celular}}
+                </td>
+                <td>
+                    {{usuarios.email}}
+                </td>
+                <td>
+                    <div *ngIf="usuarios.activo=='1' ">
+                        <p-button label="Activo " styleClass="p-mr-2"></p-button>
+                    </div>
+                    <div *ngIf="usuarios.activo !='1' ">
+                        <p-button label="Inactivo " styleClass="p-mr-2 p-button-danger"></p-button>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="7">No existen registros</td>
+            </tr>
+        </ng-template>
+    </p-table>
+
+    <p-dialog header="Title" [(visible)]="display" [breakpoints]="{'960px': '75vw', '640px': '100vw'}"
+        [style]="{width: '75vw'}">
+        <ng-template pTemplate="header">
+            <h3>Registrar Administrador</h3>
+        </ng-template>
+
+        <c-card class="mb-4">
+            <p-messages [(value)]="msgsModalRegistro"></p-messages>
+            <c-card-body>
+                <form [formGroup]="formularioRegistro">
+                    <input type="hidden" name="_token" [value]="token">
+                    <c-row style="margin-top: 1em;">
+                        <c-col class="negrilla">
+                            Primer Nombre
+                        </c-col>
+                        <c-col class="negrilla">
+                            Segundo Nombre
+                        </c-col>
+                        <c-col class="negrilla">
+                            Primer Apellido
+                        </c-col>
+                        <c-col class="negrilla">
+                            Segundo Apellido
+                        </c-col>
+                    </c-row>
+                    <c-row style="margin-top: 1em;">
+                        <c-col>
+                            <input pInputText [(ngModel)]="usuariosRegistro.nombre" formControlName="nombre"
+                                [style]="{'width':'100%'}" type="text" name="nombre" placeholder="Primer Nombre">
+                        </c-col>
+
+                        <c-col>
+                            <input pInputText [(ngModel)]="usuariosRegistro.nombre2" formControlName="nombre2"
+                                placeholder="Segundo Nombre" [style]="{'width':'100%'}" type="text" name="nombre2">
+                        </c-col>
+
+                        <c-col>
+                            <input pInputText [(ngModel)]="usuariosRegistro.apellido" formControlName="apellido"
+                                placeholder="Primer Apellido" [style]="{'width':'100%'}" type="text" name="apellido">
+                        </c-col>
+
+                        <c-col>
+                            <input pInputText [(ngModel)]="usuariosRegistro.apellido2" formControlName="apellido2"
+                                placeholder="Segundo Apellido" [style]="{'width':'100%'}" type="text" name="apellido2">
+                        </c-col>
+                    </c-row>
+
+                    <c-row style="margin-top: 1em;">
+                        <c-col class="negrilla">
+                            Documento
+                        </c-col>
+                        <c-col class="negrilla">
+                            Correo
+                        </c-col>
+                        <c-col class="negrilla">
+                            Celular
+                        </c-col>
+                    </c-row>
+
+                    <c-row style="margin-top: 1em;">
+                        <c-col>
+                            <input pInputText [(ngModel)]="usuariosRegistro.documento" formControlName="documento"
+                                (change)="validaDocumento()" placeholder="Documento" [style]="{'width':'100%'}"
+                                type="text" name="documento">
+                        </c-col>
+                        <c-col>
+                            <input pInputText [(ngModel)]="usuariosRegistro.email" formControlName="email"
+                                placeholder="Correo" (change)="validaCorreo()" [style]="{'width':'100%'}" type="text"
+                                name="email">
+                        </c-col>
+                        <c-col>
+                            <input pInputText [(ngModel)]="usuariosRegistro.celular" formControlName="celular"
+                                (change)="validaCelular()" placeholder="Celular" [style]="{'width':'100%'}" type="text"
+                                name="celular">
+                        </c-col>
+                    </c-row>
+                </form>
+            </c-card-body>
+            <c-card-footer>
+                <button pButton type="button" label="Registrar" class="p-button-primary" (click)="Registrar()"
+                    style="margin-left: 1em;">
+                </button>
+                <button pButton type="button" label="Cerrar" class="p-button-danger" (click)="cerrarModal()"
+                    style="margin-left: 1em;">
+                </button>
+            </c-card-footer>
+        </c-card>
+    </p-dialog>
+</div>

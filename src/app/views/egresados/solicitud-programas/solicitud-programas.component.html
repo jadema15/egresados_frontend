@@ -1,0 +1,90 @@
+<p-blockUI [blocked]="blockedDocument"></p-blockUI>
+<p-toast></p-toast>
+<div class="fade-in">
+
+    <p-table #dt1 dataKey="id" [value]="representatives" [rows]="10" [showCurrentPageReport]="true"
+        styleClass="p-datatable-gridlines"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
+
+        <ng-template pTemplate="header">
+            <tr>
+                <th scope="col">
+                    <div class="p-d-flex p-jc-between p-ai-center centro">
+                        N°
+                    </div>
+                </th>
+                <th scope="col">
+                    <div class="p-d-flex p-jc-between p-ai-center centro">
+                        Empresa
+                    </div>
+                </th>
+                <th scope="col">
+                    <div class="p-d-flex p-jc-between p-ai-center centro">
+                        Fecha Postulación
+                    </div>
+                </th>
+                <th scope="col">
+                    <div class="p-d-flex p-jc-between p-ai-center centro">
+                        Descripción
+                    </div>
+                </th>
+                <th scope="col">
+                    <div class="p-d-flex p-jc-between p-ai-center centro">
+                        Horario
+                    </div>
+                </th>
+                <th scope="col">
+                    <div class="p-d-flex p-jc-between p-ai-center centro">
+                        Estado
+                    </div>
+                </th>
+                <th scope="col">
+                    <div class="p-d-flex p-jc-between p-ai-center centro">
+                        Acciones
+                    </div>
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-solicitud let-rowIndex="rowIndex">
+            <tr>
+                <td>
+                    {{ rowIndex +1 }}
+                </td>
+                <td>
+                    {{solicitud.solicitud.empresa_id.razon_social}}
+                </td>
+                <td>
+                    {{solicitud.created_at | date:'yyyy-MM-dd'}}
+                </td>
+                <td>
+                    {{solicitud.solicitud.descripcion.length > 30 ? datos(solicitud.solicitud.descripcion) :
+                    solicitud.solicitud.descripcion}}
+                </td>
+                <td>
+                    {{solicitud.solicitud.horario_id.nombre_horario}}
+                </td>
+                <td>
+                    <div *ngIf="solicitud.solicitud.estado_id==3 ">
+                        <p-button label="Disponible " styleClass="p-mr-2 p-button-success"></p-button>
+                    </div>
+                    <div *ngIf="solicitud.solicitud.estado_id !=3 ">
+                        <p-button label="Cerrado " styleClass="p-mr-2 p-button-danger"></p-button>
+                    </div>
+
+
+                </td>
+                <td style="text-align: center;">
+                    <button style="margin-right: 0.5em;" pButton type="button" (click)="eliminarx(solicitud.id)"
+                        icon="pi pi-trash" class="p-button-danger"></button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="7">No existen postulaciones realizadas</td>
+            </tr>
+        </ng-template>
+    </p-table>
+
+    <p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="10000"></p-confirmDialog>
+</div>

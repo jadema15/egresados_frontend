@@ -1,0 +1,325 @@
+<p-blockUI [blocked]="blockedDocument"></p-blockUI>
+<p-toast></p-toast>
+<div class="fade-in">
+
+    <div *ngIf="!existeEgresado">
+        <p-menubar [model]="items"></p-menubar>
+    </div>
+    <div style="margin: 0.3em;" *ngIf="!existeEgresado">
+        <p-dropdown [options]="solicitudPrograma" optionLabel="nombre_programa" [(ngModel)]="programaSolicitud.programa"
+            (onChange)="cargarSolicitudPrograma()" name="programa_id" [style]="{'width':'100%'}"></p-dropdown>
+    </div>
+
+    <p-table #dt1 dataKey="id" [value]="representatives" [rows]="10" [showCurrentPageReport]="true"
+        styleClass="p-datatable-gridlines"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
+
+        <ng-template pTemplate="header">
+            <tr>
+                <th scope="col">
+                    <div class="p-d-flex p-jc-between p-ai-center centro">
+                        N°
+                    </div>
+                </th>
+                <th scope="col">
+                    <div class="p-d-flex p-jc-between p-ai-center centro">
+                        Empresa
+                    </div>
+                </th>
+                <th scope="col">
+                    <div class="p-d-flex p-jc-between p-ai-center centro">
+                        Fecha Publicación
+                    </div>
+                </th>
+                <th scope="col">
+                    <div class="p-d-flex p-jc-between p-ai-center centro">
+                        Programa
+                    </div>
+                </th>
+                <th scope="col">
+                    <div class="p-d-flex p-jc-between p-ai-center centro">
+                        Descripción
+                    </div>
+                </th>
+                <th scope="col">
+                    <div class="p-d-flex p-jc-between p-ai-center centro">
+                        Horario
+                    </div>
+                </th>
+                <th scope="col">
+                    <div class="p-d-flex p-jc-between p-ai-center centro">
+                        Acciones
+                    </div>
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-solicitud let-rowIndex="rowIndex">
+            <tr>
+                <td>
+                    {{ rowIndex +1 }}
+                </td>
+                <td>
+                    {{solicitud.empresa.razon_social}}
+                </td>
+                <td>
+                    {{solicitud.created_at | date:'yyyy-MM-dd'}}
+                </td>
+                <td>
+                    {{solicitud.programa.nombre_programa}}
+                </td>
+                <td>
+                    {{solicitud.descripcion.length > 30 ? datos(solicitud.descripcion) : solicitud.descripcion}}
+                </td>
+                <td>
+                    {{solicitud.horario.nombre_horario}}
+                </td>
+                <td style="text-align: center;">
+                    <div *ngIf="!esEgresado">
+                        <button style="margin-right: 0.1em;" pButton type="button" (click)="editar(solicitud)"
+                            icon="pi pi-pencil" class="boton-verde">
+                        </button>
+                    </div>
+                    <div *ngIf="!esEmpresa && !esAdministrador">
+                        <button style="margin-right: 0.1em;" pButton type="button" (click)="postular(solicitud.id)"
+                            icon="pi pi-user">
+                        </button>
+                    </div>
+                    <div *ngIf="!esEgresado">
+                        <button style="margin-right: 0.1em;" pButton type="button" (click)="eliminarx(solicitud.id)"
+                            icon="pi pi-trash" class="p-button-danger">
+                        </button>
+                    </div>
+                    <div *ngIf="!esEgresado">
+                        <div *ngIf="solicitud.estado_id==3">
+                            <i class="pi pi-bell p-mr-4 p-text-secondary" pBadge style="font-size: 2rem"
+                                value="{{solicitud.cantidad_postulados}}" (click)="visualizar(solicitud.id)"></i>
+                        </div>
+                        <div *ngIf="solicitud.estado_id==4">
+                            <i class="pi pi-lock p-mr-4 p-text-danger" pBadge style="font-size: 2rem" value="--"
+                                (click)="visualizar(solicitud.id)"></i>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="7">No se encuentran registros</td>
+            </tr>
+        </ng-template>
+    </p-table>
+
+    <p-dialog header="{{accion}}" [(visible)]="display" [style]="{ 'width': '60vw', 'height': dialogHeight }">
+        <c-card class="mb-4">
+            <p-messages [(value)]="msgsModal"></p-messages>
+            <c-card-body>
+                <form [formGroup]="formulario">
+                    <input type="hidden" name="_token" [value]="token">
+                    <c-row style="margin-top: 1em;">
+                        <c-col class="negrilla">
+                            Empresa
+                        </c-col>
+                        <c-col class="negrilla">
+                            Titulación Egresado
+                        </c-col>
+                    </c-row>
+                    <c-row>
+                        <c-col>
+                            <p-dropdown [options]="empresas" optionLabel="razon_social" [readonly]="existeEmpresa"
+                                [(ngModel)]="solicitud.empresa_id" name="empresa_id" [style]="{'width':'100%'}"
+                                formControlName="empresa_id"></p-dropdown>
+                        </c-col>
+                        <c-col>
+                            <p-dropdown [options]="programas" optionLabel="nombre_programa"
+                                [(ngModel)]="solicitud.programa" name="programa_id" [style]="{'width':'100%'}"
+                                formControlName="programa_id"></p-dropdown>
+                        </c-col>
+                    </c-row>
+                    <c-row style="margin-top: 1em;">
+                        <c-col class="negrilla">
+                            Información Cargo
+                        </c-col>
+                    </c-row>
+                    <c-row>
+                        <c-col>
+                            <textarea pInputTextarea [(ngModel)]="solicitud.descripcion" name="descripcion"
+                                formControlName="descripcion" [style]="{'width':'100%'}"></textarea>
+                        </c-col>
+                    </c-row>
+
+                    <c-row style="margin-top: 1em;">
+                        <c-col class="negrilla">
+                            Horario
+                        </c-col>
+                        <c-col class="negrilla">
+                            Candidatos a recibir
+                        </c-col>
+                    </c-row>
+
+                    <c-row style="margin-top: 1em;">
+                        <c-col>
+                            <p-dropdown [options]="horarios" optionLabel="nombre_horario"
+                                [(ngModel)]="solicitud.horario_id" name="horario_id" [style]="{'width':'100%'}"
+                                formControlName="horario_id"></p-dropdown>
+                        </c-col>
+                        <c-col>
+                            <input pInputText [(ngModel)]="solicitud.cantidad" [min]="3" [max]="20"
+                                formControlName="cantidad" [style]="{'width':'100%'}" type="number" name="cantidad">
+                        </c-col>
+                    </c-row>
+
+                    <c-row style="margin-top: 1em;">
+                        <c-col class="negrilla">
+                            Cerrar Vacante en la siguiente Fecha
+                        </c-col>
+                        <c-col class="negrilla">
+                            Estado
+                        </c-col>
+                    </c-row>
+                    <c-row style="margin-top: 1em;">
+                        <c-col>
+                            <p-calendar dateFormat="yy-mm-dd" [(ngModel)]="solicitud.fecha_cerrar" [showIcon]="true"
+                                appendTo="body" [monthNavigator]="true" [yearNavigator]="true" [yearRange]="rangeDate"
+                                formControlName="fecha_cerrar" [readonlyInput]="true" (onSelect)="seleccionarFecha()"
+                                [style]="{ width: '100%' }">
+                            </p-calendar>
+                        </c-col>
+                        <c-col>
+                            <p-dropdown [options]="activos" optionLabel="nombre" [(ngModel)]="solicitud.estado_id"
+                                [readonly]="true" name="estado_id" [style]="{'width':'100%'}"
+                                formControlName="estado_id"></p-dropdown>
+                        </c-col>
+                    </c-row>
+                </form>
+            </c-card-body>
+            <c-card-footer>
+                <button pButton type="button" label="{{boton}}" class="p-button-primary" (click)="Registrar()"
+                    style="margin-left: 1em;">
+                </button>
+                <button pButton type="button" label="Cerrar" class="p-button-danger" (click)="cerrar()"
+                    style="margin-left: 1em;">
+                </button>
+            </c-card-footer>
+        </c-card>
+    </p-dialog>
+
+
+    <p-dialog header="Title" [(visible)]="visualizarPostulados" [breakpoints]="{'960px': '75vw', '640px': '100vw'}"
+        [style]="{width: '75vw'}">
+        <ng-template pTemplate="header">
+            <h3>Listado de Postulados</h3>
+        </ng-template>
+        <p-table #dt1 dataKey="id" [value]="listaPostulados" [rows]="10" [showCurrentPageReport]="true"
+            styleClass="p-datatable-gridlines"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
+
+            <ng-template pTemplate="header">
+                <tr>
+                    <th scope="col">
+                        <div class="p-d-flex p-jc-between p-ai-center centro">
+                            N°
+                        </div>
+                    </th>
+                    <th scope="col">
+                        <div class="p-d-flex p-jc-between p-ai-center centro">
+                            Nombres
+                        </div>
+                    </th>
+                    <th scope="col">
+                        <div class="p-d-flex p-jc-between p-ai-center centro">
+                            Apellidos
+                        </div>
+                    </th>
+                    <th scope="col">
+                        <div class="p-d-flex p-jc-between p-ai-center centro">
+                            Contacto
+                        </div>
+                    </th>
+                    <th scope="col">
+                        <div class="p-d-flex p-jc-between p-ai-center centro">
+                            Hoja de Vida
+                        </div>
+                    </th>
+                    <th scope="col">
+                        <div class="p-d-flex p-jc-between p-ai-center centro">
+                            Seleccionar
+                        </div>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-postulado let-rowIndex="rowIndex">
+                <tr>
+                    <td>
+                        {{ rowIndex +1 }}
+                    </td>
+                    <td>
+                        {{postulado.egresado.nombre}} {{postulado.egresado.nombre2}}
+                    </td>
+                    <td>
+                        {{postulado.egresado.apellido}} {{postulado.egresado.apellido2}}
+                    </td>
+                    <td>
+                        {{postulado.egresado.celular}} {{postulado.egresado.hoja_vida}}
+                    </td>
+                    <td style="text-align: center;">
+                        <button style="margin-right: 0.5em;" pButton type="button"
+                            [disabled]="postulado.egresado.hoja_vida==0?true:false"
+                            (click)="visualizaHv(postulado.egresado.documento)" icon="pi pi-user">
+                        </button>
+                    </td>
+                    <td style="text-align: center;">
+                        <div *ngIf="postulado.solicitud.estado_id==3">
+                            <button style="margin-right: 0.5em;" pButton type="button"
+                                (click)="visualizarModalYesNo(postulado.solicitud_id, postulado.egresado.id)"
+                                icon="pi pi-flag" class="boton-verde">
+                            </button>
+                        </div>
+                        <div *ngIf="postulado.solicitud.estado_id==4">
+                            <button style="margin-right: 0.5em;" pButton type="button" icon="pi pi-flag"
+                                class="boton-rojo">
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="7">No existen registros</td>
+                </tr>
+            </ng-template>
+        </p-table>
+        <p-footer>
+            <button type="button" pButton autofocus label="Cerrar" (click)="cerrarVentanaPostulados()"></button>
+        </p-footer>
+    </p-dialog>
+
+
+    <p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="10000" [acceptLabel]="yes"></p-confirmDialog>
+
+    <p-dialog header="" [(visible)]="visualizarHv" [style]="{width: '50vw'}">
+        <ng-template pTemplate="header">
+            <h3>Hoja de Vida</h3>
+        </ng-template>
+        <ng-template pTemplate="body">
+            <iframe [src]="pdfUrl" width="100%" height="600px"></iframe>
+        </ng-template>
+        <p-footer style="margin-top: 2em;">
+            <button type="button" pButton autofocus label="Cerrar" (click)="cerrarModal()"></button>
+        </p-footer>
+    </p-dialog>
+
+    <p-dialog header="Title" [(visible)]="visualizarYesNo" [breakpoints]="{'960px': '75vw', '640px': '100vw'}"
+        [style]="{width: '50vw'}">
+        <ng-template pTemplate="header">
+            <h3>Postular</h3>
+        </ng-template>
+        <ng-template pTemplate="body">
+            ¿Realmente desea seleccionar este egresado para la vacante laboral?
+        </ng-template>
+        <p-footer>
+            <button type="button" pButton autofocus label="Seleccionar" (click)="seleccionarModalYesNo()"></button>
+            <button type="button" pButton autofocus label="Cerrar" (click)="cerrarModalYesNo()"></button>
+        </p-footer>
+    </p-dialog>
+
+</div>

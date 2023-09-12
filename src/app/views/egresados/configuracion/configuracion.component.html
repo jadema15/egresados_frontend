@@ -1,0 +1,230 @@
+<p-blockUI [blocked]="blockedDocument"></p-blockUI>
+<p-toast></p-toast>
+<div class="fade-in">
+    <c-card class="mb-4">
+        <p-messages [(value)]="msgsModal"></p-messages>
+        <c-card-body>
+            <form [formGroup]="formulario">
+                <input type="hidden" name="_token" [value]="token">
+                <c-row style="margin-top: 1em;">
+                    <c-col class="negrilla">
+                        Primer Nombre
+                    </c-col>
+                    <c-col class="negrilla">
+                        Segundo Nombre
+                    </c-col>
+                    <c-col class="negrilla">
+                        Primer Apellido
+                    </c-col>
+                    <c-col class="negrilla">
+                        Segundo Apellido
+                    </c-col>
+                </c-row>
+                <c-row style="margin-top: 1em;">
+                    <c-col>
+                        <input pInputText [(ngModel)]="usuarios.nombre" formControlName="nombre"
+                            [style]="{'width':'100%'}" type="text" name="nombre" placeholder="Primer Nombre">
+                    </c-col>
+
+                    <c-col>
+                        <input pInputText [(ngModel)]="usuarios.nombre2" formControlName="nombre2"
+                            placeholder="Segundo Nombre" [style]="{'width':'100%'}" type="text" name="nombre2">
+                    </c-col>
+
+                    <c-col>
+                        <input pInputText [(ngModel)]="usuarios.apellido" formControlName="apellido"
+                            placeholder="Primer Apellido" [style]="{'width':'100%'}" type="text" name="apellido">
+                    </c-col>
+
+                    <c-col>
+                        <input pInputText [(ngModel)]="usuarios.apellido2" formControlName="apellido2"
+                            placeholder="Segundo Apellido" [style]="{'width':'100%'}" type="text" name="apellido2">
+                    </c-col>
+
+                </c-row>
+
+                <c-row style="margin-top: 1em;">
+                    <c-col class="negrilla">
+                        Documento
+                    </c-col>
+                    <c-col class="negrilla">
+                        Correo
+                    </c-col>
+                    <c-col class="negrilla">
+                        Celular
+                    </c-col>
+                </c-row>
+
+                <c-row style="margin-top: 1em;">
+                    <c-col>
+                        <input pInputText [(ngModel)]="usuarios.documento" formControlName="documento"
+                            placeholder="Documento" [style]="{'width':'100%'}" type="text" name="documento" readonly>
+                    </c-col>
+                    <c-col>
+                        <input pInputText [(ngModel)]="usuarios.email" formControlName="email" placeholder="Correo"
+                            [style]="{'width':'100%'}" type="text" name="email">
+                    </c-col>
+                    <c-col>
+                        <input pInputText [(ngModel)]="usuarios.celular" formControlName="celular" placeholder="Celular"
+                            [style]="{'width':'100%'}" type="text" name="celular">
+                    </c-col>
+                </c-row>
+            </form>
+        </c-card-body>
+        <c-card-footer>
+            <button pButton type="button" label="Actualizar" class="p-button-primary" (click)="actualizarUsuario()">
+            </button>
+            <button pButton type="button" label="Cambiar Contraseña" class="p-button-warning"
+                (click)="modalActualizarPassword()" style="margin-left: 1em;">
+            </button>
+        </c-card-footer>
+    </c-card>
+
+    <p-dialog header="Title" [(visible)]="display" [breakpoints]="{'960px': '75vw', '640px': '100vw'}"
+        [style]="{width: '75vw'}">
+        <ng-template pTemplate="header">
+            <h3>Registrar Administrador</h3>
+        </ng-template>
+
+        <c-card class="mb-4">
+            <p-messages [(value)]="msgsModalRegistro"></p-messages>
+            <c-card-body>
+                <form [formGroup]="formularioRegistro">
+                    <input type="hidden" name="_token" [value]="token">
+                    <c-row style="margin-top: 1em;">
+                        <c-col class="negrilla">
+                            Primer Nombre
+                        </c-col>
+                        <c-col class="negrilla">
+                            Segundo Nombre
+                        </c-col>
+                        <c-col class="negrilla">
+                            Primer Apellido
+                        </c-col>
+                        <c-col class="negrilla">
+                            Segundo Apellido
+                        </c-col>
+                    </c-row>
+                    <c-row style="margin-top: 1em;">
+                        <c-col>
+                            <input pInputText [(ngModel)]="usuariosRegistro.nombre" formControlName="nombre"
+                                [style]="{'width':'100%'}" type="text" name="nombre" placeholder="Primer Nombre">
+                        </c-col>
+
+                        <c-col>
+                            <input pInputText [(ngModel)]="usuariosRegistro.nombre2" formControlName="nombre2"
+                                placeholder="Segundo Nombre" [style]="{'width':'100%'}" type="text" name="nombre2">
+                        </c-col>
+
+                        <c-col>
+                            <input pInputText [(ngModel)]="usuariosRegistro.apellido" formControlName="apellido"
+                                placeholder="Primer Apellido" [style]="{'width':'100%'}" type="text" name="apellido">
+                        </c-col>
+
+                        <c-col>
+                            <input pInputText [(ngModel)]="usuariosRegistro.apellido2" formControlName="apellido2"
+                                placeholder="Segundo Apellido" [style]="{'width':'100%'}" type="text" name="apellido2">
+                        </c-col>
+                    </c-row>
+
+                    <c-row style="margin-top: 1em;">
+                        <c-col class="negrilla">
+                            Documento
+                        </c-col>
+                        <c-col class="negrilla">
+                            Correo
+                        </c-col>
+                        <c-col class="negrilla">
+                            Celular
+                        </c-col>
+                    </c-row>
+
+                    <c-row style="margin-top: 1em;">
+                        <c-col>
+                            <input pInputText [(ngModel)]="usuariosRegistro.documento" formControlName="documento"
+                                (change)="validaDocumento()" placeholder="Documento" [style]="{'width':'100%'}"
+                                type="text" name="documento">
+                        </c-col>
+                        <c-col>
+                            <input pInputText [(ngModel)]="usuariosRegistro.email" formControlName="email"
+                                placeholder="Correo" (change)="validaCorreo()" [style]="{'width':'100%'}" type="text"
+                                name="email">
+                        </c-col>
+                        <c-col>
+                            <input pInputText [(ngModel)]="usuariosRegistro.celular" formControlName="celular"
+                                (change)="validaCelular()" placeholder="Celular" [style]="{'width':'100%'}" type="text"
+                                name="celular">
+                        </c-col>
+                    </c-row>
+                </form>
+            </c-card-body>
+            <c-card-footer>
+                <button pButton type="button" label="Registrar" class="p-button-primary" (click)="Registrar()"
+                    style="margin-left: 1em;">
+                </button>
+                <button pButton type="button" label="Cerrar" class="p-button-danger" (click)="cerrarModal()"
+                    style="margin-left: 1em;">
+                </button>
+            </c-card-footer>
+        </c-card>
+    </p-dialog>
+
+    <p-dialog header="Cambiar Contraseña" [(visible)]="visualizarUpdatePassword"
+        [breakpoints]="{'960px': '75vw', '640px': '100vw'}" [style]="{width: '40vw'}">
+
+        <c-card class="mb-4">
+            <p-messages [(value)]="msgsModalCambiarPassword"></p-messages>
+            <c-card-body>
+                <form [formGroup]="formularioCambioPassword">
+                    <input type="hidden" name="_token" [value]="token">
+
+                    <c-row style="margin-top: 1em;">
+                        <c-col class="negrilla">
+                            Contraseña actual
+                        </c-col>
+                    </c-row>
+                    <c-row style="margin-top: 1em;">
+                        <c-col>
+                            <input pInputText formControlName="password_old" [style]="{'width':'100%'}" type="password"
+                                [readonly]="permiteCambiarPassword" (change)="validarPassword()"
+                                [(ngModel)]="cambioPassword.password_old" name="password_old">
+                        </c-col>
+                    </c-row>
+                    <div *ngIf="permiteCambiarPassword">
+                        <c-row style="margin-top: 1em;">
+                            <c-col class="negrilla">
+                                Nueva Contraseña
+                            </c-col>
+                        </c-row>
+                        <c-row style="margin-top: 1em;">
+                            <c-col>
+                                <input pInputText formControlName="password_new" [style]="{'width':'100%'}"
+                                    type="password" [(ngModel)]="cambioPassword.password_new" name="password_new">
+                            </c-col>
+                        </c-row>
+                        <c-row style="margin-top: 1em;">
+                            <c-col class="negrilla">
+                                Repetir Nueva Contraseña
+                            </c-col>
+                        </c-row>
+                        <c-row style="margin-top: 1em;">
+                            <c-col>
+                                <input pInputText formControlName="password_re" [style]="{'width':'100%'}"
+                                    type="password" [(ngModel)]="cambioPassword.password_re" name="password_re">
+                            </c-col>
+                        </c-row>
+                    </div>
+
+                </form>
+            </c-card-body>
+            <c-card-footer>
+                <button pButton type="button" label="Cambiar Contraseña" class="p-button-primary"
+                    style="margin-left: 1em;" [disabled]="!permiteCambiarPassword" (click)="CambiarPassword()">
+                </button>
+                <button pButton type="button" label="Cerrar" class="p-button-danger" style="margin-left: 1em;"
+                    (click)="cerrarModalActualizarPassword()">
+                </button>
+            </c-card-footer>
+        </c-card>
+    </p-dialog>
+</div>

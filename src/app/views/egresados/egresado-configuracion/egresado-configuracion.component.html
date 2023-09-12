@@ -1,0 +1,239 @@
+<p-blockUI [blocked]="blockedDocument"></p-blockUI>
+<p-toast></p-toast>
+<div class="fade-in">
+    <c-card class="mb-4">
+        <p-messages [(value)]="msgsModal"></p-messages>
+        <c-card-body>
+            <form [formGroup]="formulario" (ngSubmit)="uploadFile()" enctype="multipart/form-data">
+                <input type="hidden" name="_token" [value]="token">
+                <c-row style="margin-top: 1em;">
+                    <c-col class="negrilla">
+                        Primer Nombre
+                    </c-col>
+                    <c-col class="negrilla">
+                        Segundo Nombre
+                    </c-col>
+                    <c-col class="negrilla">
+                        Primer Apellido
+                    </c-col>
+                    <c-col class="negrilla">
+                        Segundo Apellido
+                    </c-col>
+                </c-row>
+                <c-row style="margin-top: 1em;">
+                    <c-col>
+                        <input pInputText [(ngModel)]="egresado.nombre" formControlName="nombre"
+                            [style]="{'width':'100%'}" type="text" name="nombre" placeholder="Primer Nombre">
+                    </c-col>
+
+                    <c-col>
+                        <input pInputText [(ngModel)]="egresado.nombre2" formControlName="nombre2"
+                            placeholder="Segundo Nombre" [style]="{'width':'100%'}" type="text" name="nombre2">
+                    </c-col>
+
+                    <c-col>
+                        <input pInputText [(ngModel)]="egresado.apellido" formControlName="apellido"
+                            placeholder="Primer Apellido" [style]="{'width':'100%'}" type="text" name="apellido">
+                    </c-col>
+
+                    <c-col>
+                        <input pInputText [(ngModel)]="egresado.apellido2" formControlName="apellido2"
+                            placeholder="Segundo Apellido" [style]="{'width':'100%'}" type="text" name="apellido2">
+                    </c-col>
+
+                </c-row>
+
+                <c-row style="margin-top: 1em;">
+                    <c-col class="negrilla">
+                        Documento
+                    </c-col>
+                    <c-col class="negrilla">
+                        Fecha Nacimiento
+                    </c-col>
+                    <c-col class="negrilla">
+                        Sexo
+                    </c-col>
+                </c-row>
+
+                <c-row style="margin-top: 1em;">
+                    <c-col>
+                        <input pInputText [(ngModel)]="egresado.documento" formControlName="documento"
+                            placeholder="Documento" [style]="{'width':'100%'}" type="text" name="documento" readonly>
+                    </c-col>
+                    <c-col>
+                        <p-calendar [showIcon]="true" dateFormat="yy-mm-dd" formControlName="fecha_nac"
+                            (onSelect)="seleccionarFecha()" placeholder="(*) Fecha Nacimiento" dateFormat="dd/mm/yy"
+                            [yearNavigator]="true" yearRange="1975:2030" [(ngModel)]="egresado.fecha_nac"
+                            [style]="{'position': 'relative', 'width':'100%'}"></p-calendar>
+                    </c-col>
+                    <c-col>
+                        <p-dropdown [options]="sexos" optionLabel="nombre_sexo" [(ngModel)]="egresado.sexo" name="sexo"
+                            [style]="{'width':'100%'}" formControlName="sexo"></p-dropdown>
+                    </c-col>
+                </c-row>
+
+                <c-row style="margin-top: 1em;">
+                    <c-col class="negrilla">
+                        Programa Técnico
+                    </c-col>
+                    <c-col class="negrilla">
+                        Estado Civil
+                    </c-col>
+                    <c-col class="negrilla">
+                        Celular
+                    </c-col>
+                    <c-col class="negrilla">
+                        Correo
+                    </c-col>
+                </c-row>
+
+                <c-row style="margin-top: 1em;">
+                    <c-col>
+                        <p-dropdown [options]="programas" optionLabel="nombre_programa"
+                            [(ngModel)]="egresado.programa_id" name="programa_id" [style]="{'width':'100%'}"
+                            formControlName="programa_id"></p-dropdown>
+                    </c-col>
+
+                    <c-col>
+                        <p-dropdown [options]="estadoscivil" optionLabel="nombre_estado_civil"
+                            [(ngModel)]="egresado.estadocivil_id" name="estadocivil_id" [style]="{'width':'100%'}"
+                            formControlName="estadocivil_id"></p-dropdown>
+                    </c-col>
+
+                    <c-col>
+                        <input pInputText [(ngModel)]="egresado.celular" formControlName="celular" placeholder="Celular"
+                            [style]="{'width':'100%'}" type="text" name="celular">
+                    </c-col>
+
+                    <c-col>
+                        <input pInputText [(ngModel)]="egresado.correo" formControlName="correo" placeholder="Correo"
+                            [style]="{'width':'100%'}" type="text" name="correo">
+                    </c-col>
+                </c-row>
+                <c-row style="margin-top: 1em;">
+                    <c-col class="negrilla">
+                        Cargar Hoja de Vida en formato PDF
+                    </c-col>
+                    <c-col class="negrilla">
+                        Visualizar
+                    </c-col>
+                    <c-col class="negrilla">
+
+                    </c-col>
+                </c-row>
+
+                <c-row style="margin-top: 1em;">
+                    <c-col class="negrilla">
+                        <form (ngSubmit)="uploadFile()" enctype="multipart/form-data" class="upload-form">
+                            <div class="input-container">
+                                <input type="file" (change)="onFileSelected($event)" class="file-input" />
+                                <button type="submit" class="upload-button">Subir</button>
+                            </div>
+                        </form>
+                    </c-col>
+                    <c-col class="negrilla">
+                        <button pButton type="button" label="Hoja de Vida" class="p-button-warning"
+                            [disabled]="egresado.hoja_vida==0?true:false" (click)="lanzarModal()">
+                        </button>
+                    </c-col>
+                    <c-col class="negrilla">
+
+                    </c-col>
+                </c-row>
+
+                <c-row style="margin-top: 1em;">
+                    <c-col class="negrilla">
+                        Observacion
+                    </c-col>
+                </c-row>
+
+                <c-row style="margin-top: 1em;">
+                    <c-col>
+                        <textarea pInputTextarea placeholder="Observación" style="width: 100%;"
+                            [(ngModel)]="egresado.observacion" formControlName="observacion"
+                            name="observacion"></textarea>
+                    </c-col>
+                </c-row>
+
+            </form>
+        </c-card-body>
+        <c-card-footer>
+            <button pButton type="button" label="Actualizar" class="p-button-primary" (click)="actualizarEgresado()">
+            </button>
+            <button pButton type="button" label="Cambiar Contraseña" class="p-button-warning"
+                (click)="modalActualizarPassword()" style="margin-left: 1em;">
+            </button>
+        </c-card-footer>
+
+        <p-dialog header="Previsualizar Hoja de Vida" [(visible)]="visualizarHv" [style]="{width: '60vw'}">
+            <ng-template pTemplate="header">
+                <h3>Hoja de Vida</h3>
+            </ng-template>
+            <ng-template pTemplate="body">
+                <iframe [src]="pdfUrl" width="100%" height="600px"></iframe>
+            </ng-template>
+            <p-footer style="margin-top: 2em;">
+                <button type="button" pButton autofocus label="Cerrar" (click)="cerrarModal()"></button>
+            </p-footer>
+        </p-dialog>
+    </c-card>
+</div>
+
+<p-dialog header="Cambiar Contraseña" [(visible)]="visualizarUpdatePassword"
+    [breakpoints]="{'960px': '75vw', '640px': '100vw'}" [style]="{width: '40vw'}">
+
+    <c-card class="mb-4">
+        <p-messages [(value)]="msgsModalCambiarPassword"></p-messages>
+        <c-card-body>
+            <form [formGroup]="formularioCambioPassword">
+                <input type="hidden" name="_token" [value]="token">
+
+                <c-row style="margin-top: 1em;">
+                    <c-col class="negrilla">
+                        Contraseña actual
+                    </c-col>
+                </c-row>
+                <c-row style="margin-top: 1em;">
+                    <c-col>
+                        <input pInputText formControlName="password_old" [style]="{'width':'100%'}" type="password"
+                            [readonly]="permiteCambiarPassword" (change)="validarPassword()"
+                            [(ngModel)]="cambioPassword.password_old" name="password_old">
+                    </c-col>
+                </c-row>
+                <div *ngIf="permiteCambiarPassword">
+                    <c-row style="margin-top: 1em;">
+                        <c-col class="negrilla">
+                            Nueva Contraseña
+                        </c-col>
+                    </c-row>
+                    <c-row style="margin-top: 1em;">
+                        <c-col>
+                            <input pInputText formControlName="password_new" [style]="{'width':'100%'}" type="password"
+                                [(ngModel)]="cambioPassword.password_new" name="password_new">
+                        </c-col>
+                    </c-row>
+                    <c-row style="margin-top: 1em;">
+                        <c-col class="negrilla">
+                            Repetir Nueva Contraseña
+                        </c-col>
+                    </c-row>
+                    <c-row style="margin-top: 1em;">
+                        <c-col>
+                            <input pInputText formControlName="password_re" [style]="{'width':'100%'}" type="password"
+                                [(ngModel)]="cambioPassword.password_re" name="password_re">
+                        </c-col>
+                    </c-row>
+                </div>
+
+            </form>
+        </c-card-body>
+        <c-card-footer>
+            <button pButton type="button" label="Cambiar Contraseña" class="p-button-primary" style="margin-left: 1em;"
+                [disabled]="!permiteCambiarPassword" (click)="CambiarPassword()">
+            </button>
+            <button pButton type="button" label="Cerrar" class="p-button-danger" style="margin-left: 1em;"
+                (click)="cerrarModalActualizarPassword()">
+            </button>
+        </c-card-footer>
+    </c-card>
+</p-dialog>
